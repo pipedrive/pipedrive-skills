@@ -13,7 +13,7 @@ lack Pipedrive's `order_nr` has its stage-order rules switched off, and the repo
 Before any scope or owner question, resolve the selected user working folder and check
 its settings. A missing config under `/home/claude` does not prove the selected device
 folder has none. If verified current-session names/identity are absent, call the exposed
-`getAccountContext` tool first (Cowork: `mcp__Pipedrive__getAccountContext`). Read its schema,
+`getAccountContext` tool first (Cowork: `mcp__Pipedrive__getAccountContext`; Claude Code: `mcp__plugin_pipedrive-sales_pipedrive__getAccountContext`). Read its schema,
 capture the actual response and use its names in the question options. Historical logs,
 memories and prior runs are not current account metadata. Numeric IDs remain internal.
 For output-only requests with a valid saved report, reuse it without CRM discovery.
