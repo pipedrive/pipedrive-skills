@@ -1,0 +1,81 @@
+{
+  "description": "Hooks for the Pipedrive Sales skills (Claude Code and Cowork; claude.ai chat ignores plugin hooks). They save each Pipedrive read response for the bundled scripts, record each new message, save the host's response to a dashboard or Claude Doc publication, check the chat's last message against the text a script saved this turn, and let a Pipedrive write through only when a preflight script saved those exact parameters this turn, re-checked against the skill's write rules; a write that succeeded is not let through again. Every file they write sits under .pipedrive-sales/ in the working folder; the read capture and the write guard do nothing until a skill run has created that folder.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/mark_turn.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.+__(addActivity|addDeal|addDealProduct|addLead|addNote|addOrganization|addPerson|addProduct|addProductVariation|addProject|convertLeadToDeal|updateActivity|updateDeal|updateDealProduct|updateLead|updateMailThreadDetails|updateNote|updateOrganization|updatePerson|updateProduct|updateProductVariation|updateProject)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_pipedrive_write.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__.+__(getAccountContext|get_account_context|getActivities|getActivity|getDeal|getDeals|getDealProducts|getDealsProducts|getLead|getLeadConversionStatus|getLeads|getNote|getNotes|getOrganization|getOrganizations|getPerson|getPersons|getPersonProducts|getProduct|getProductDeals|getProductFiles|getProductImage|getProducts|getProductVariations|getStage|getStages|searchDeals|searchLeads|searchOrganization|searchPersons|searchProducts)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/capture_pipedrive_response.py\"",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Artifact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/capture_artifact_publish.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*Claude_Docs__(batch|create|update|read|delete|export|query)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/capture_claude_doc.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.+__(addActivity|addDeal|addDealProduct|addLead|addNote|addOrganization|addPerson|addProduct|addProductVariation|addProject|convertLeadToDeal|updateActivity|updateDeal|updateDealProduct|updateLead|updateMailThreadDetails|updateNote|updateOrganization|updatePerson|updateProduct|updateProductVariation|updateProject)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/settle_pipedrive_write.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/check_last_reply.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "pipedrive",
+  "owner": {
+    "name": "Pipedrive"
+  },
+  "metadata": {
+    "description": "Pipedrive Sales: Pipedrive skills for Claude, on the official Pipedrive MCP connector."
+  },
+  "plugins": [
+    {
+      "name": "pipedrive-sales",
+      "source": "./",
+      "description": "Pipedrive pipeline brief, deal triage and forecast skills on the official Pipedrive MCP.",
+      "version": "0.7.22"
+    }
+  ]
+}
