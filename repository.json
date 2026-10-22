@@ -1,6 +1,6 @@
 {
-  "name": "skills",
-  "description": "skills",
+  "name": "pipedrive-skills",
+  "description": "Pipedrive's official skills for AI assistants and agents.",
   "owner": "mcp-squad",
   "type": "misc",
   "status": "unreleased"
