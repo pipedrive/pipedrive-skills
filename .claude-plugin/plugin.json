@@ -3,10 +3,17 @@
   "displayName": "Pipedrive Sales",
   "version": "0.7.22",
   "description": "Pipedrive pipeline brief, deal triage and forecast skills on the official Pipedrive MCP.",
+  "icon": "assets/pipedrive-logo.png",
   "author": {
     "name": "Pipedrive"
   },
   "license": "Apache-2.0",
+  "homepage": "https://www.pipedrive.com/",
+  "documentationUrl": "https://www.pipedrive.com/features/mcp-skills",
+  "supportUrl": "https://support.pipedrive.com/en/contact-us",
+  "repository": "https://github.com/Pipedrive/pipedrive-skills",
+  "privacyPolicyUrl": "https://www.pipedrive.com/en/privacy",
+  "termsOfServiceUrl": "https://www.pipedrive.com/en/terms-of-service",
   "keywords": [
     "pipedrive",
     "crm",

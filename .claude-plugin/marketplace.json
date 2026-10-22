@@ -11,7 +11,8 @@
       "name": "pipedrive-sales",
       "source": "./",
       "description": "Pipedrive pipeline brief, deal triage and forecast skills on the official Pipedrive MCP.",
-      "version": "0.7.22"
+      "version": "0.7.22",
+      "icon": "assets/pipedrive-logo.png"
     }
   ]
 }
