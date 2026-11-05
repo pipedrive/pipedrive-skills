@@ -1,9 +1,8 @@
 {
   "name": "pipedrive-sales",
   "displayName": "Pipedrive Sales",
-  "version": "0.7.22",
-  "description": "Pipedrive pipeline brief, deal triage and forecast skills on the official Pipedrive MCP.",
-  "icon": "assets/pipedrive-logo.png",
+  "version": "0.7.24",
+  "description": "Pipedrive-native sales workflows: daily brief, pipeline brief, single-deal check, forecast, call prep, follow-up drafts, call logging, person and organization lookup, plus a front door for quick lookups and updates. Every write waits for your yes. Runs on the official Pipedrive MCP, vanilla Pipedrive only (no custom fields).",
   "author": {
     "name": "Pipedrive"
   },
@@ -16,10 +15,17 @@
   "termsOfServiceUrl": "https://www.pipedrive.com/en/terms-of-service",
   "keywords": [
     "pipedrive",
-    "crm",
     "sales",
-    "pipeline",
+    "crm",
+    "outreach",
+    "call-prep",
+    "daily-brief",
+    "meeting-follow-up",
+    "contact-details",
+    "pipeline-brief",
+    "sales-outreach",
     "forecast",
-    "deal-triage"
+    "deal-triage",
+    "triage"
   ]
 }
