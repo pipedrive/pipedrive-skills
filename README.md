@@ -1,34 +1,18 @@
 # Pipedrive Sales
 
-Pipedrive pipeline brief, deal triage and forecast skills on the official Pipedrive MCP.
+Sales workflows for Pipedrive, built for how Pipedrive works: deals move through stages in board order, every deal's next step is its next activity, stages have rot limits, and people carry Hot, Warm or Cold labels. Ask in plain language. Claude reads your Pipedrive and writes back only after you say yes.
 
+Version 0.7.24 · 9 skills · Apache-2.0
 
+## Connect Pipedrive
 
-Version 0.7.22. A release workflow in the source repository builds this repository; the next release overwrites every file.
-
-## What's inside
-
-| Skill | What it does |
-|---|---|
-| `pipeline-brief` | Pipeline status: what moved, what closes this week, what stalled, ranked by your team's rules. Reads only. |
-| `deal-triage` | Flags stalled or at-risk deals and proposes one next activity per deal. Writes only after you confirm each one. |
-| `forecast` | Revenue forecast for a period, with coverage against target and risks. Reads only. |
-
-Every skill reads your Pipedrive account through the official Pipedrive MCP connector, which the plugin references (`.mcp.json`, `https://mcp.pipedrive.ai/mcp`). Installing the plugin gives Claude no access by itself: you connect Pipedrive from the plugin's **Connectors** tab, or sign in the first time Claude Code calls it, and Claude then sees what your Pipedrive role allows.
-
-## Where it runs
-
-- **Claude Cowork and Claude Code**: supported. The plugin's hooks save each Pipedrive response for the bundled scripts, check each reply the scripts produce, and let a write reach Pipedrive only after you confirm it, and only once: a write that succeeded is not sent again.
-- **claude.ai chat**: the skills load, but chat does not run plugin hooks, so nothing is saved and no write is guarded. The skills say so and stop. Use Cowork or Claude Code.
+Every skill reads your Pipedrive account through the official Pipedrive MCP, which the plugin references (`.mcp.json`, `https://mcp.pipedrive.ai/mcp`). Installing the plugin gives Claude no access by itself: connect Pipedrive from the plugin's **Connectors** tab, or sign in the first time Claude calls it. Claude then sees what your Pipedrive role allows. See `CONNECTORS.md`.
 
 ## Install
 
 **Claude Cowork and claude.ai**
 
-- From the directory, once the plugin is listed: **Customize → Plugins → Discover**, select the plugin, **Add**. On Team and Enterprise plans an Owner can set it to **Installed by default** or **Required** for the organization.
 - From this repository: **Customize → Plugins → Add → Add marketplace**, enter `pipedrive/skills`, then install `pipedrive-sales`.
-
-Then connect Pipedrive on the plugin's **Connectors** tab and start a task, for example "give me my pipeline brief for this week".
 
 **Claude Code**
 
@@ -37,23 +21,41 @@ claude plugin marketplace add pipedrive/skills
 claude plugin install pipedrive-sales@pipedrive
 ```
 
-A plugin added on claude.ai also reaches Claude Code as a synced plugin at the next session start.
-
-## Data
-
-- **What it reads**: deals, activities, notes, people, organizations, stages and your account context, through the Pipedrive connector, with your own Pipedrive permissions.
-- **What it sends**: nothing to any service other than Pipedrive. When you ask for a dashboard or a Claude Doc, the host's own Artifact or Claude Docs tool publishes it in your Claude account.
-- **What it stores**: a `.pipedrive-sales/` folder in the working folder you run it in. It holds your saved settings (`config.json`), the run records the scripts need, and copies of Pipedrive responses the hooks saved for them (`runs/captured/`), which the scripts delete after 7 days, and the id of the Pipedrive user you are signed in as (`runs/current-user.json`), which the write checks use. These are plain files with CRM data in them: if the working folder is a git repository, add `.pipedrive-sales/` to its `.gitignore`. Delete the folder to remove everything the plugin kept.
-- **What it writes to Pipedrive**: only `deal-triage` writes, and only through four tools (`addActivity`, `updateActivity`, `addNote`, `updateDeal`), each after you confirm that item. A write reaches Pipedrive only with the exact parameters a preflight script produced; the plugin's write guard denies anything else. The other skills never write.
-
-## Experimental: Codex and ChatGPT
-
-Unsupported. This release ships no Codex or ChatGPT manifest. A Codex-format marketplace exists in the preview build, for testing only. Whether ChatGPT runs plugin hooks is not confirmed, so the write guard and the saved responses may not exist there.
+Start a new session afterwards. The skills show up as `pipedrive-sales:<skill>`.
 
 ## Updates
 
-Each release is a tag (`vX.Y.Z`) plus a GitHub release with per-skill zips and a SHA-256 manifest. A directory install updates on its own. For a marketplace install, run `claude plugin marketplace update pipedrive` or select **Check for updates** under **Customize → Plugins**.
+Each release is a tag (`vX.Y.Z`) plus a GitHub release. For a marketplace install, run `claude plugin marketplace update pipedrive` or select **Check for updates** under **Customize → Plugins**.
 
-## Support and license
+## What you can ask
 
-Report problems on this repository's issue tracker. Never include customer names, account ids, OAuth tokens or API keys in an issue. Licensed under Apache-2.0; see `LICENSE`.
+| Skill | Ask it | What you get |
+|---|---|---|
+| `pipedrive` | "show me my open deals", "move the Acme deal to Proposal Made", "what can you do?" | The front door. Quick answers about deals, persons, organizations, activities, leads and products, small record changes after a yes, and a hand-off to the right workflow below |
+| `daily-brief` | "good morning", "what's on my plate today?" | Today's meetings with deal context, overdue and due-today activities, deals with no next activity, rotting deals, deals closing soon, and suggested next activities checked against what's already scheduled |
+| `pipeline-brief` | "how's my pipeline?", "which deals are rotting?" | Your board in stage order with counts and value per currency. Every open deal is sorted into act today, this week, or nothing found, with numbered next activities you can pick |
+| `deal-triage` | "what should I do about the Globex deal?" | One deal: where it sits, what's holding it back, what's already scheduled, and the single next activity that would move it |
+| `forecast` | "what's my forecast for this quarter?", "what if the Acme deal slips?" | Won to date, weighted figures where Pipedrive holds probabilities, best case, passed close dates, a by-stage view, and what-if answers. Read-only |
+| `call-prep` | "prep me for my call with Fay Moss" | A call brief: the deal's stage and close date, who's on the call, a dated timeline, and a call plan. It can save the brief as a note on the deal |
+| `contact-details` | "pull up Cara Diaz", "who do we know at Initech?" | A read-only view of one person or organization: label, owner, deals, recent activities and notes, and flags |
+| `sales-outreach` | "follow up with Cara about the proposal" | One email draft grounded in the deal's notes, activities and synced mail, plus next-activity options to keep the deal moving |
+| `meeting-follow-up` | "just got off the phone with Eli Novak, they confirmed budget" | Closes the activity that just happened with its outcome, saves a note, schedules the next activity, and proposes deal and label changes for your yes |
+
+## How writes work
+
+- **Nothing is written until you confirm.** Every skill shows exactly what will change and asks first: `Create it? (yes / edit / skip)`, or a numbered list you pick from. A stage change always gets its own yes.
+- **Text in your CRM is treated as data.** Instructions written inside notes, emails or record names are never followed.
+- **Failed writes are checked, not retried blindly.** After an error, the skill re-reads the record to see whether the change landed before it offers to try again.
+- **Someone else's record is flagged.** If a change touches a deal or person owned by a colleague, the confirm prompt says so.
+
+## Good to know
+
+- **Rotting is computed** from each stage's rot limit and the deal's time in stage, so it can differ from the rot badge in the Pipedrive UI. The skills say so.
+- **Currencies are never added together.** Totals come per currency.
+- **What the Pipedrive MCP can't see:** goals or quotas, deal field history (so a slipped close date can't be detected), and a deal's full participant list. The skills tell you when that matters instead of estimating.
+- **Records aren't deleted.** The Pipedrive MCP has no delete tools.
+- **Web search:** call-prep and the account-research agent can look up public company news for context. That sends the organization's name to a web search. Nothing else leaves your Pipedrive and Claude session, and nothing is stored on disk.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
