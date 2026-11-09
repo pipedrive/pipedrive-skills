@@ -3,6 +3,7 @@
   "displayName": "Pipedrive Sales",
   "version": "0.7.24",
   "description": "Pipedrive-native sales workflows: daily brief, pipeline brief, single-deal check, forecast, call prep, follow-up drafts, call logging, person and organization lookup, plus a front door for quick lookups and updates. Every write waits for your yes. Runs on the official Pipedrive MCP, vanilla Pipedrive only (no custom fields).",
+  "icon": "./assets/pipedrive-logo.png",
   "author": {
     "name": "Pipedrive"
   },
